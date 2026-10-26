@@ -1,0 +1,24 @@
+async function loadRealNews() {
+    try {
+        const response = await fetch('news.json?cache_bust=' + new Date().getTime());
+        const news = await response.json();
+        
+        const container = document.getElementById('news-container');
+        container.innerHTML = '';
+
+        news.forEach(item => {
+            container.innerHTML += `
+                <div class="news-card">
+                    <span class="badge">${item.source}</span>
+                    <h3>${item.title}</h3>
+                    <a href="${item.link}" target="_blank">לקריאת הכתבה המלאה 🔗</a>
+                </div>
+            `;
+        });
+    } catch (err) {
+        console.error("שגיאה שטעינת החדשות:", err);
+    }
+}
+
+// טוען את החדשות האמיתיות בעת העלייה
+loadRealNews();
