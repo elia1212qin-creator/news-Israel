@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ישראל LIVE - חדשות בזמן אמת</title>
+    <!-- פונט Heebo מבית Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #38bdf8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: #1e293b80;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        .refresh-btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            background-color: var(--accent-color);
+            color: #0f172a;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .refresh-btn:hover {
+            opacity: 0.9;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .news-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            background-color: #334155;
+            color: var(--accent-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .source-ynet { background-color: #b91c1c; color: #fff; }
+        .source-walla { background-color: #0284c7; color: #fff; }
+        .source-n12 { background-color: #c026d3; color: #fff; }
+        .source-geektime { background-color: #16a34a; color: #fff; }
+
+        .news-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .news-summary {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .read-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .read-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+            padding: 50px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="live-dot"></div>
+            חדשות ישראל LIVE
+        </div>
+        <div id="last-update-time" style="font-size: 0.85rem; color: var(--text-secondary);">בטעינה...</div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="חפש בחדשות..." oninput="filterNews()">
+            <button class="refresh-btn" onclick="loadRealNews()">רענן חדשות 🔄</button>
+        </div>
+
+        <div id="news-container" class="news-grid">
+            <div class="loading">טוען מבזקים וחדשות בזמן אמת... ⏳</div>
+        </div>
+    </div>
+
+    <script>
+        let allNewsData = [];
+
+        async function loadRealNews() {
+            const container = document.getElementById('news-container');
+            container.innerHTML = '<div class="loading">טוען מבזקים וחדשות בזמן אמת... ⏳</div>';
+
+            try {
+                // הוספת מזהה ייחודי (cache_bust) כדי לנטרל מטמון ולקבל תמיד את ה-JSON הכי מעודכן
+                const response = await fetch('news.json?cb=' + new Date().getTime());
+                
+                if (!response.ok) {
+                    throw new Error("קובץ ה-JSON עדיין לא נוצר בגיטהב.");
+                }
+
+                allNewsData = await response.json();
+                
+                document.getElementById('last-update-time').innerText = 'עודכן לאחרונה: ' + new Date().toLocaleTimeString('he-IL', {hour: '2-digit', minute:'2-digit'});
+                
+                renderNews(allNewsData);
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `
+                    <div class="loading" style="color: #ef4444;">
+                        ⚠️ עדיין אין נתונים בקובץ ה-news.json.<br>
+                        אם זה עכשיו הועלה ל-GitHub, ה-Action בודק ומייצר את הקובץ תוך דקה-שתיים.
+                    </div>
+                `;
+            }
+        }
+
+        function renderNews(newsList) {
+            const container = document.getElementById('news-container');
+            
+            if (newsList.length === 0) {
+                container.innerHTML = '<div class="loading">לא נמצאו כתבות תואמות לחיפוש.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            newsList.forEach(item => {
+                // ניקוי תגיות HTML מהתקציר במידה ויש
+                const cleanSummary = item.summary ? item.summary.replace(/<[^>]*>?/gm, '') : '';
+                const sourceClass = 'source-' + item.source.toLowerCase();
+
+                const cardHTML = `
+                    <div class="news-card">
+                        <div>
+                            <div class="card-header">
+                                <span class="badge ${sourceClass}">${item.source}</span>
+                            </div>
+                            <h3 class="news-title">${item.title}</h3>
+                            <p class="news-summary">${cleanSummary}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="${item.link}" target="_blank" class="read-link">לקריאה מלאה ←</a>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        function filterNews() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allNewsData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                (item.summary && item.summary.toLowerCase().includes(query))
+            );
+            renderNews(filtered);
+        }
+
+        // טעינה ראשונית
+        loadRealNews();
+    </script>
+</body>
+</html>
